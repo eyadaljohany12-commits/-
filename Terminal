@@ -1,3 +1,0 @@
-git add .
-git commit -m "Fix startup crash and ensure stability"
-git push origin main
