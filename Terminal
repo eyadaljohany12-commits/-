@@ -1,0 +1,3 @@
+git add .
+git commit -m "Fix deployment structure and runtime"
+git push origin main
