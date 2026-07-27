@@ -6,7 +6,7 @@ import os
 
 app = FastAPI(
     title="Na'na' Deep Research Engine",
-    version="2.0.2"
+    version="2.0.3"
 )
 
 if os.path.exists("static"):
