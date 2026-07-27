@@ -1,4 +1,3 @@
-git rm render.yaml
 git add .
-git commit -m "Remove render.yaml for manual setup"
+git commit -m "Fix startup crash and ensure stability"
 git push origin main
