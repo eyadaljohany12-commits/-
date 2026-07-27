@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import os
 
 app = FastAPI(
-    title="Na'na' Deep Research Engine",
+    title="Neenaam Platform",
     version="2.0.3"
 )
 
@@ -21,28 +21,14 @@ async def serve_root():
     if os.path.exists(index_path):
         with open(index_path, "r", encoding="utf-8") as f:
             return f.read()
-    return "<h3>Na'na' Engine is active. Please ensure static/index.html is deployed.</h3>"
+    return "<h3>Neenaam Platform is active. Please ensure static/index.html is deployed.</h3>"
 
 @app.post("/api/deep-search")
 async def execute_deep_search(payload: SearchPayload):
     query = payload.query
     return {
         "status": "success",
-        "queryId": "nana_q_99281",
-        "generatedScript": f"التحليل الاستقصائي المتقدم للاستعلام:\n\"{query}\"\n\nتم فحص الأقوال والمراجع التاريخية والعلمية لضمان الدقة المطلقة.",
-        "narrativesAndQuotes": [
-            "الحقيقة ليست سوى وجهة نظر تم التحقق من سندها."
-        ],
-        "citationsMatrix": [
-            {
-                "id": "cit_alpha_01",
-                "title": "أرشيف الدراسات التاريخية والعلمية المعتمدة",
-                "url": "https://scholar.google.com",
-                "excerptOriginal": "Empirical evidence confirms historical accuracy.",
-                "excerptTranslated": "تؤكد الأدلة التجريبية الدقة التاريخية.",
-                "language": "en",
-                "confidenceScore": 0.98
-            }
-        ],
-        "executionTimeMs": 342.5
+        "queryId": "neenaam_q_99281",
+        "generatedScript": f"التحليل والاستخراج للمحتوى:\n\"{query}\"",
+        "executionTimeMs": 150.0
     }
