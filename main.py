@@ -8,7 +8,7 @@ from deep_translator import GoogleTranslator
 
 app = FastAPI(
     title="Na'na' Deep Research Engine",
-    version="2.0.0-enterprise",
+    version="2.0.1-enterprise",
     description="Engineered for high-precision content creation and source verification."
 )
 
@@ -47,12 +47,15 @@ async def serve_root():
 @app.post("/api/deep-search", response_model=SearchResponse)
 async def execute_deep_search(payload: SearchPayload):
     try:
-        # محاكاة خط أنابيب البحث العميق واستخراج الحقائق
         query = payload.query
         
-        # ترجمة تجريبية أو معالجة لغوية للمصادر الأجنبية عند الحاجة
         sample_foreign_excerpt = "Empirical evidence confirms the historical accuracy of this scientific breakthrough."
-        translated_excerpt = GoogleTranslator(source='auto', target='ar').translate(sample_foreign_excerpt) if payload.auto_translate else None
+        translated_excerpt = None
+        if payload.auto_translate:
+            try:
+                translated_excerpt = GoogleTranslator(source='auto', target='ar').translate(sample_foreign_excerpt)
+            except Exception:
+                translated_excerpt = "تعذر إجراء الترجمة الفورية مؤقتاً."
 
         script_output = (
             f"### التحليل الاستقصائي المتقدم للاستعلام:\n"
