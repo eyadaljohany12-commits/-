@@ -1,3 +1,4 @@
+git rm render.yaml
 git add .
-git commit -m "Fix deployment structure and runtime"
+git commit -m "Remove render.yaml for manual setup"
 git push origin main
