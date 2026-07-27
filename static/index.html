@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نعناع | Na'na' - منصة البحث العميق لصناع المحتوى</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #FAFAFA; color: #121212; font-family: system-ui, -apple-system, sans-serif; }
+        .accent-mint { background-color: #00C896; }
+        .accent-mint-text { color: #00C896; }
+        .accent-mint-border { border-color: #00C896; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="w-full py-4 px-8 border-b border-gray-200 flex justify-between items-center bg-white shadow-xs">
+        <div class="flex items-center gap-3">
+            <span class="w-3.5 h-3.5 rounded-full accent-mint inline-block shadow-sm"></span>
+            <h1 class="text-xl font-bold tracking-wide">نعناع <span class="text-xs font-normal text-gray-400">Na'na' Engine</span></h1>
+        </div>
+        <div class="flex items-center gap-4 text-xs text-gray-500 font-medium">
+            <span class="px-3 py-1 bg-gray-100 rounded-full">الوضع الاستقصائي: فعال</span>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Center Search Canvas -->
+        <section class="lg:col-span-2 flex flex-col gap-6">
+            <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-100 flex flex-col gap-4">
+                <label for="queryInput" class="text-sm font-semibold text-gray-800">مختبر البحث العميق وتحليل الحقائق والأقوال:</label>
+                <div class="flex gap-2">
+                    <input type="text" id="queryInput" placeholder="اطرح فرضيته أو سؤالك الاستقصائي (مثل: تفاصيل الروايات المتنازع عليها حول...) ..." 
+                        class="flex-1 px-4 py-3.5 rounded-xl border border-gray-200 focus:outline-none focus:border-[#00C896] transition text-sm">
+                    <button onclick="executeDeepSearch()" class="accent-mint text-white px-6 py-3.5 rounded-xl font-semibold text-sm hover:opacity-90 transition shadow-xs">
+                        استقصاء عميق
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Output Area -->
+            <div id="outputContainer" class="bg-white p-6 rounded-2xl shadow-xs border border-gray-100 hidden flex flex-col gap-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="text-md font-bold text-gray-800">السكريبت والمعطيات المستخلصة:</h3>
+                    <span id="execTime" class="text-xs text-gray-400"></span>
+                </div>
+                <div id="scriptOutput" class="text-gray-700 leading-relaxed text-sm whitespace-pre-line"></div>
+                <div id="quotesContainer" class="mt-2 p-4 bg-gray-50 rounded-xl border border-gray-100 flex flex-col gap-2 hidden">
+                    <span class="text-xs font-bold text-gray-500">أقوال ومقتطفات موثقة:</span>
+                    <div id="quotesList" class="text-xs text-gray-600 italic"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sidecar Citations Drawer -->
+        <aside class="bg-white p-6 rounded-2xl shadow-xs border border-gray-100 flex flex-col gap-4 h-fit">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="text-md font-bold text-gray-800">لوحة المراجع الجانبية (Sidecar)</h3>
+                <span class="text-[10px] bg-emerald-50 text-[#00C896] px-2 py-0.5 rounded-md font-bold">بدون مغادرة الصفحة</span>
+            </div>
+            <div id="citationsList" class="flex flex-col gap-3 text-sm text-gray-500">
+                <p class="italic text-xs text-gray-400 py-4 text-center">أدخل استعلاماً لتظهر المراجع والترجمات الفورية هنا فوراً...</p>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        async function executeDeepSearch() {
+            const query = document.getElementById('queryInput').value;
+            if (!query) return;
+
+            const outputContainer = document.getElementById('outputContainer');
+            const scriptOutput = document.getElementById('scriptOutput');
+            const citationsList = document.getElementById('citationsList');
+            const execTime = document.getElementById('execTime');
+            const quotesContainer = document.getElementById('quotesContainer');
+            const quotesList = document.getElementById('quotesList');
+
+            scriptOutput.innerText = "جاري تنفيذ الخوارزميات العميقة وتقاطع المصادر عبر الشبكة...";
+            outputContainer.classList.remove('hidden');
+            citationsList.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-4">جاري جلب المراجع وتوليد مصفوفة الثقة...</p>';
+
+            try {
+                const response = await fetch('/api/deep-search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query, auto_translate: true })
+                });
+                const data = await response.json();
+
+                scriptOutput.innerText = data.generatedScript;
+                execTime.innerText = `سرعة التنفيذ: ${data.executionTimeMs}ms`;
+
+                if (data.narrativesAndQuotes && data.narrativesAndQuotes.length > 0) {
+                    quotesContainer.classList.remove('hidden');
+                    quotesList.innerHTML = data.narrativesAndQuotes.map(q => `<p>${q}</p>`).join('');
+                }
+
+                citationsList.innerHTML = '';
+                data.citationsMatrix.forEach(cit => {
+                    citationsList.innerHTML += `
+                        <div class="p-3.5 border border-gray-100 rounded-xl bg-gray-50/50 flex flex-col gap-2 transition hover:border-[#00C896]">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-gray-800 text-xs">${cit.title}</span>
+                                <span class="text-[10px] font-mono bg-white px-1.5 py-0.5 rounded border border-gray-200">ثقة: ${cit.confidenceScore * 100}%</span>
+                            </div>
+                            <p class="text-xs text-gray-600 bg-white p-2 rounded border border-gray-100"><strong>النص الأصلي:</strong> ${cit.excerptOriginal}</p>
+                            ${cit.excerptTranslated ? `<p class="text-xs text-emerald-800 bg-emerald-50/50 p-2 rounded border border-emerald-100"><strong>الترجمة الفورية:</strong> ${cit.excerptTranslated}</p>` : ''}
+                            <a href="${cit.url}" target="_blank" class="text-xs accent-mint-text font-semibold underline mt-1">عرض المصدر الأصلي ↗</a>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                scriptOutput.innerText = "حدث خطأ غير متوقع أثناء معالجة البيانات الاستقصائية.";
+            }
+        }
+    </script>
+</body>
+</html>
